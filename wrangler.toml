@@ -1,0 +1,22 @@
+name = "emt-paiement"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Les PDF sont dans "private" : ils ne sont servis que par le code, après paiement confirmé.
+[assets]
+directory = "./private"
+binding = "ASSETS"
+run_worker_first = true
+
+[vars]
+SITE_URL = "https://statesacademy67-ship-it.github.io/Emt-Academy-"
+MAIL_FROM = "emtacademy@protonmail.com"   # adresse validée dans Brevo
+MAIL_FROM_NAME = "Emt Academy"
+ALLOWED_ORIGIN = "https://statesacademy67-ship-it.github.io"
+MODE = "1"        # 1 = test (clé sandbox kpp_sbk_), 2 = réel (clé live kpp_lk_)
+WITH_FEES = "0"   # 0 = les frais KPrimePay sont payés par Emt Academy, le client paie le prix affiché
+
+# Compteur d'envois (anti-abus). Créer avec : wrangler kv namespace create ORDERS  puis coller l'id ici
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "COLLER_ICI_L_ID"

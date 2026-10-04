@@ -15,7 +15,11 @@
 <main class="merci">
   <h1 id="titre">Vérification du paiement…</h1>
   <p id="msg"></p>
-  <a id="dl" class="btn" hidden>Télécharger ma formation (PDF)</a>
+  <div id="envoi" hidden>
+    <p>Entre ton adresse e-mail : tu y recevras ta formation en PDF.</p>
+    <input id="email" type="email" placeholder="ton@email.com" autocomplete="email" inputmode="email">
+    <button id="go" class="btn" type="button">Recevoir ma formation</button>
+  </div>
   <small id="ref"></small>
   <a href="index.html">← Retour aux formations</a>
 </main>
@@ -28,14 +32,13 @@ const $ = id => document.getElementById(id);
 let essais = 0;
 async function verifier() {
   if (!order || !API_URL) { $("titre").textContent = "Commande introuvable"; $("msg").textContent = "Écris-nous : emtacademy@protonmail.com"; return; }
-  $("ref").textContent = "N° de commande : " + order + " (garde cette page pour retélécharger)";
+  $("ref").textContent = "N° de commande : " + order + " (garde cette page)";
   try {
     const d = await (await fetch(API_URL + "/api/status?order=" + encodeURIComponent(order))).json();
     if (d.status === "success") {
       $("titre").textContent = "Paiement confirmé ✓ Merci !";
       $("msg").textContent = d.nom;
-      $("dl").href = API_URL + "/api/download?order=" + encodeURIComponent(order);
-      $("dl").hidden = false; return;
+      $("envoi").hidden = false; return;
     }
     if (d.status === "failed") { $("titre").textContent = "Paiement non abouti"; $("msg").textContent = "Tu peux réessayer depuis la page des formations."; return; }
   } catch (_) {}
@@ -43,6 +46,17 @@ async function verifier() {
   else { $("titre").textContent = "Paiement en attente"; $("msg").textContent = "Si tu as été débité, écris-nous avec ton numéro de commande."; }
 }
 verifier();
+$("go").onclick = async () => {
+  const email = $("email").value.trim(), b = $("go");
+  if (!email) { $("msg").textContent = "Entre ton e-mail."; return; }
+  b.disabled = true; b.textContent = "Envoi…";
+  try {
+    const d = await (await fetch(API_URL + "/api/envoyer", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ order, email }) })).json();
+    if (d.ok) { $("titre").textContent = "Formation envoyée ✓"; $("msg").textContent = "Vérifie ta boîte mail (et les courriers indésirables) : " + email; $("envoi").hidden = true; return; }
+    $("msg").textContent = d.error || "Erreur, réessaie.";
+  } catch (_) { $("msg").textContent = "Erreur de connexion, réessaie."; }
+  b.disabled = false; b.textContent = "Recevoir ma formation";
+};
 </script>
 </body>
 </html>

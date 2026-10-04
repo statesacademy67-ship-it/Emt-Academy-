@@ -1,0 +1,19 @@
+MISE EN LIGNE DU SERVEUR DE PAIEMENT (une seule fois, sur ordinateur)
+
+A. Compte e-mail d'envoi (Brevo, gratuit : 300 e-mails/jour)
+   1. Créer un compte sur brevo.com
+   2. Senders > Add a sender : emtacademy@protonmail.com, puis valider le lien reçu
+   3. SMTP & API > API keys > créer une clé (commence par xkeysib-)
+
+B. Serveur (Cloudflare, gratuit)
+   1. Compte sur cloudflare.com, Node.js installé (nodejs.org)
+   2. npm install -g wrangler        puis   wrangler login
+   3. wrangler kv namespace create ORDERS   -> copier l'id affiché dans wrangler.toml (COLLER_ICI_L_ID)
+   4. wrangler secret put KPP_KEY     -> coller la clé KPrimePay (test d'abord : kpp_sbk_)
+   5. wrangler secret put BREVO_KEY   -> coller la clé Brevo
+   6. wrangler deploy                 -> affiche https://emt-paiement.XXXX.workers.dev
+C. Site
+   Dans produits.js : API_URL = "adresse du serveur", puis republier sur GitHub. Tester un achat.
+
+PASSAGE EN RÉEL : MODE = "2" dans wrangler.toml, refaire B4 avec la clé kpp_lk_, puis wrangler deploy.
+Ne jamais mettre une clé dans un fichier du site ni dans GitHub.
