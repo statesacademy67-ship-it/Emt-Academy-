@@ -1,0 +1,31 @@
+:root{--bg:#fff;--txt:#000;--gris:#f3f3f3;--ligne:#d9d9d9;--doux:#555}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:"Helvetica Neue",Arial,sans-serif;line-height:1.55}
+a{color:inherit}
+:focus-visible{outline:3px solid #000;outline-offset:3px}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--ligne);background:#fff;position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#000;font-weight:900;font-size:1.3rem;letter-spacing:-.01em}
+.logo{width:48px;height:48px;border-radius:50%;object-fit:cover;background:#000;border:2px solid #000}
+.support-link{font-size:.95rem;text-decoration:none;border:1px solid #000;padding:6px 14px;border-radius:999px}
+.support-link:hover{background:#000;color:#fff}
+
+.hero{text-align:center;padding:56px 20px 36px;max-width:760px;margin:0 auto}
+.hero h1{font-size:clamp(1.9rem,6vw,3rem);line-height:1.15;font-weight:800;letter-spacing:-.02em}
+.hero p{margin-top:14px;color:var(--doux);font-size:1.05rem}
+
+.catalogue{max-width:1100px;margin:0 auto;padding:10px 20px 60px}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:24px}
+.carte{border:1px solid var(--ligne);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+.carte img{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--gris);display:block}
+.carte-corps{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.carte h2{font-size:1.1rem}
+.carte p{font-size:.92rem;color:var(--doux);flex:1}
+.prix{font-weight:800;font-size:1.15rem}
+.btn{display:block;text-align:center;background:#000;color:#fff;text-decoration:none;padding:12px;border-radius:6px;font-weight:700;border:2px solid #000}
+.btn:hover{background:#fff;color:#000}
+.vide{grid-column:1/-1;text-align:center;color:var(--doux);padding:40px 0}
+
+.footer{border-top:1px solid var(--ligne);text-align:center;padding:28px 20px;font-size:.9rem;color:var(--doux)}
+.footer p+p{margin-top:6px}
