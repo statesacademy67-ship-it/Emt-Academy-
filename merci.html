@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ta commande – Emt Academy</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><img src="logo.png" alt="Logo Emt Academy" class="logo"><span>Emt Academy</span></a>
+  <a class="support-link" href="mailto:emtacademy@protonmail.com">Support</a>
+</header>
+<main class="merci">
+  <h1 id="titre">Vérification du paiement…</h1>
+  <p id="msg"></p>
+  <a id="dl" class="btn" hidden>Télécharger ma formation (PDF)</a>
+  <small id="ref"></small>
+  <a href="index.html">← Retour aux formations</a>
+</main>
+<script src="produits.js"></script>
+<script>
+const q = new URLSearchParams(location.search);
+let order = q.get("order");
+try { order = order || localStorage.getItem("emt_order"); } catch (_) {}
+const $ = id => document.getElementById(id);
+let essais = 0;
+async function verifier() {
+  if (!order || !API_URL) { $("titre").textContent = "Commande introuvable"; $("msg").textContent = "Écris-nous : emtacademy@protonmail.com"; return; }
+  $("ref").textContent = "N° de commande : " + order + " (garde cette page pour retélécharger)";
+  try {
+    const d = await (await fetch(API_URL + "/api/status?order=" + encodeURIComponent(order))).json();
+    if (d.status === "success") {
+      $("titre").textContent = "Paiement confirmé ✓ Merci !";
+      $("msg").textContent = d.nom;
+      $("dl").href = API_URL + "/api/download?order=" + encodeURIComponent(order);
+      $("dl").hidden = false; return;
+    }
+    if (d.status === "failed") { $("titre").textContent = "Paiement non abouti"; $("msg").textContent = "Tu peux réessayer depuis la page des formations."; return; }
+  } catch (_) {}
+  if (++essais < 40) setTimeout(verifier, 3000);
+  else { $("titre").textContent = "Paiement en attente"; $("msg").textContent = "Si tu as été débité, écris-nous avec ton numéro de commande."; }
+}
+verifier();
+</script>
+</body>
+</html>
